@@ -50,10 +50,9 @@ Options:
                         Ex. #channel or @username. Requires Slack Option.
   --proxy=HTTP_PROXY    Optional: Allows you to specify a proxy server if needed
 			to push the notifications.
-
+  --teamsalert		Optional: Use Microsft Teams. Need to also specify a webhook
   --teamswebhook=TEAMSWEBHOOK
 			Optional: Allows you to push to Microsft Teams webhook.
-			Doesn't allow username or password at the moment.
 ```
 ## Optional features
 The following are optional features:
