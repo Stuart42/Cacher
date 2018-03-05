@@ -50,6 +50,13 @@ Options:
                         Ex. #channel or @username. Requires Slack Option.
 ```
 
+  --proxy=HTTP_PROXY    Optional: Allows you to specify a proxy server if needed
+			to push the notifications.
+
+  --teamswebhook=TEAMSWEBHOOK
+			Optional: Allows you to push to Microsft Teams webhook.
+			Doesn't allow username or password at the moment.
+
 ## Optional features
 The following are optional features:
 
@@ -132,6 +139,27 @@ cacher.py --slackalert \
 --slackchannel "@egomez" \
 --slackwebhook "https://hooks.slack.com/services/YOURURL"``
 ```
+
+#### Microsoft Teams webhook.
+
+A Microsoft Teams webhook must be created. To create, go to the three dots, Manage Team, add the Webhook from the store, and then copy the URL given.
+
+#### Proxy support
+
+This adds proxy support to Cacher. This just passes an option to the -x option in Curl, so this will support anything Curl supports. 
+
+``` bash
+cacher.py --proxy http://10.0.0.2:8080/
+```
+
+It should also support authentication via 
+
+``` bash
+cacher.py --proxy http://username:password@10.0.0.2:8080/
+```
+
+
+
 
 ## Screenshots
 

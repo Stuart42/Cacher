@@ -30,7 +30,7 @@ Updated version for High Sierra
 Author: Joseph Clark
 Last Updated: 11-17-2017
 """
-version = '3.0.4'
+version = '3.0.5'
 
 
 def cacher(lines, targetDate, friendlyNames):
@@ -706,7 +706,7 @@ def get_uptime():
 
 
 def post_to_slack(targetDate, cacherdata, slackchannel, slackusername,
-                  slackwebhook):
+                  slackwebhook, useproxy, proxyserver):
     # Server App Icon DL
     url = 'https://itunes.apple.com/lookup?id=883878097'
     try:
@@ -735,9 +735,39 @@ def post_to_slack(targetDate, cacherdata, slackchannel, slackusername,
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
         output, err = proc.communicate()
+        if useproxy is True:
+            cmd.extend(['-x', proxyserver])
+
     except Exception:
         print 'Failed to send message to Slack'
 
+def post_to_teams(targetDate, cacherdata, teamswebhook, useproxy, proxyserver):
+    # Server App Icon DL
+    url = 'https://itunes.apple.com/lookup?id=883878097'
+    try:
+        request = urllib2.urlopen(url)
+        jsondata = json.loads(request.read())
+        iconurl = jsondata['results'][0]['artworkUrl100']
+    except (urllib2.URLError, ValueError, KeyError) as e:
+        # hardcode icon url in case it fails.
+        iconurl = 'http://is5.mzstatic.com/image/thumb/Purple122/v4/b9/e8/c4' \
+            '/b9e8c4b9-ce9c-174a-c1a8-d0ad0fc21da9/source/100x100bb.png'
+    # Slack payload
+    payload = {
+        'title': 'Caching Server Data ' + targetDate,
+        'text': cacherdata
+    }
+    try:
+        cmd = ['/usr/bin/curl', '-H', 'Content-Type: application/json', '-X', 'POST', '-d',
+                json.dumps(payload), teamswebhook]
+        if useproxy is True:
+            cmd.extend(['-x', proxyserver])
+
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        output, err = proc.communicate()
+    except Exception:
+        print 'Failed to send message to Microsoft Teams'
 
 def main():
     # Check for macOS Server 5.2 or higher. Use LooseVersion just in case.
@@ -772,6 +802,11 @@ def main():
     o.add_option("--slackchannel", default=None,
                  help=("Optional: Slack channel. Can be username or channel "
                        "Ex. #channel or @username. Requires Slack Option."))
+    o.add_option("--teamsalert", action="store_true", default=True,
+                 help=("Optional: Use Microsoft Teams"))
+    o.add_option("--teamswebhook", default=None,
+                 help=("Optional: Micrsoft Teams Webhook URL. Requires Teamsalert Option."))
+    o.add_option('--proxy', default=None, help='Use a proxy server for Slack and Microsft Teams')
 
     opts, args = o.parse_args()
 
@@ -814,6 +849,16 @@ def main():
         slackAlert = True
     else:
         slackAlert = False
+
+    if opts.proxy:
+        useproxy = True
+    else:
+        useproxy = False
+
+    proxyserver = opts.proxy
+
+    teamsalert = opts.teamsalert
+    teamswebhook = opts.teamswebhook
     slackalert = opts.slackalert
     slackwebhook = opts.slackwebhook
     if opts.slackusername:
@@ -836,7 +881,10 @@ def main():
         print ''
     if slackalert is True:
         post_to_slack(targetDate, "\n".join(cacherdata), slackchannel,
-                      slackusername, slackwebhook)
+                      slackusername, slackwebhook, useproxy, proxyserver)
+    if teamsalert is True:
+        post_to_teams(targetDate, "\n".join(cacherdata), teamswebhook,
+                    useproxy, proxyserver)
 
 
 if __name__ == '__main__':
