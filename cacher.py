@@ -36,6 +36,7 @@ version = '3.0.5'
 def cacher(lines, targetDate, friendlyNames):
     # Basically run through all the lines a single time and collect all the
     # relevant data to slice, do stats with, etc.
+    siteName = BrES
     noClientIdentityLog = []
     sizeLog = []
     AC2Log = []
@@ -59,6 +60,8 @@ def cacher(lines, targetDate, friendlyNames):
     iPadNumberLog = []
     iPhoneNumberLog = []
     iPodNumberLog = []
+
+
     # Friendly Darwin versions for macOS. This allows us to dynamically add
     # the macOS version (for the alert), while dynamically looping through the
     # logs.
@@ -724,7 +727,7 @@ def post_to_slack(targetDate, cacherdata, slackchannel, slackusername,
         "icon_url": iconurl,
         "attachments": [
             {
-                'pretext': 'Caching Server Data ' + targetDate,
+                'pretext': 'Caching Server Data for ' + siteName + targetDate,
                 'text': cacherdata
             }
         ]
@@ -754,7 +757,7 @@ def post_to_teams(targetDate, cacherdata, teamswebhook, useproxy, proxyserver):
             '/b9e8c4b9-ce9c-174a-c1a8-d0ad0fc21da9/source/100x100bb.png'
     # Slack payload
     payload = {
-        'title': 'Caching Server Data ' + targetDate,
+        'title': 'Caching Server Data for ' +siteName + targetDate,
         'text': cacherdata
     }
     try:
