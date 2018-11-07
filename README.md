@@ -155,7 +155,8 @@ It should also support authentication via
 cacher.py --proxy http://username:password@10.0.0.2:8080/
 ```
 
-
+## Site Name
+You can edit the siteName variable to have Teams or Slack include your site name
 
 
 ## Screenshots
