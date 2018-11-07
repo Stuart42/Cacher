@@ -709,7 +709,7 @@ def get_uptime():
 
 
 def post_to_slack(targetDate, cacherdata, slackchannel, slackusername,
-                  slackwebhook, useproxy, proxyserver):
+                  slackwebhook, useproxy, proxyserver, siteName):
     # Server App Icon DL
     url = 'https://itunes.apple.com/lookup?id=883878097'
     try:
@@ -744,7 +744,7 @@ def post_to_slack(targetDate, cacherdata, slackchannel, slackusername,
     except Exception:
         print 'Failed to send message to Slack'
 
-def post_to_teams(targetDate, cacherdata, teamswebhook, useproxy, proxyserver):
+def post_to_teams(targetDate, cacherdata, teamswebhook, useproxy, proxyserver, siteName):
     # Server App Icon DL
     url = 'https://itunes.apple.com/lookup?id=883878097'
     try:
@@ -884,10 +884,10 @@ def main():
         print ''
     if slackalert is True:
         post_to_slack(targetDate, "\n".join(cacherdata), slackchannel,
-                      slackusername, slackwebhook, useproxy, proxyserver)
+                      slackusername, slackwebhook, useproxy, proxyserver, siteName)
     if teamsalert is True:
         post_to_teams(targetDate, "\n".join(cacherdata), teamswebhook,
-                    useproxy, proxyserver)
+                    useproxy, proxyserver, siteName)
 
 
 if __name__ == '__main__':
