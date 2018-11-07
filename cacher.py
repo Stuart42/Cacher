@@ -36,7 +36,8 @@ version = '3.0.5'
 def cacher(lines, targetDate, friendlyNames):
     # Basically run through all the lines a single time and collect all the
     # relevant data to slice, do stats with, etc.
-    siteName = 'SiteName'
+    global siteName
+    siteName = "Example Site"
     noClientIdentityLog = []
     sizeLog = []
     AC2Log = []
