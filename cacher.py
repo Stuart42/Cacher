@@ -36,8 +36,6 @@ version = '3.0.5'
 def cacher(lines, targetDate, friendlyNames):
     # Basically run through all the lines a single time and collect all the
     # relevant data to slice, do stats with, etc.
-    global siteName
-    siteName = "Example Site"
     noClientIdentityLog = []
     sizeLog = []
     AC2Log = []
@@ -710,7 +708,7 @@ def get_uptime():
 
 
 def post_to_slack(targetDate, cacherdata, slackchannel, slackusername,
-                  slackwebhook, useproxy, proxyserver, siteName):
+                  slackwebhook, useproxy, proxyserver, sitename):
     # Server App Icon DL
     url = 'https://itunes.apple.com/lookup?id=883878097'
     try:
@@ -728,7 +726,7 @@ def post_to_slack(targetDate, cacherdata, slackchannel, slackusername,
         "icon_url": iconurl,
         "attachments": [
             {
-                'pretext': 'Caching Server Data for ' + siteName + targetDate,
+                'pretext': 'Caching Server Data for ' + sitename + targetDate,
                 'text': cacherdata
             }
         ]
@@ -745,7 +743,7 @@ def post_to_slack(targetDate, cacherdata, slackchannel, slackusername,
     except Exception:
         print 'Failed to send message to Slack'
 
-def post_to_teams(targetDate, cacherdata, teamswebhook, useproxy, proxyserver, siteName):
+def post_to_teams(targetDate, cacherdata, teamswebhook, useproxy, proxyserver, sitename):
     # Server App Icon DL
     url = 'https://itunes.apple.com/lookup?id=883878097'
     try:
@@ -758,7 +756,7 @@ def post_to_teams(targetDate, cacherdata, teamswebhook, useproxy, proxyserver, s
             '/b9e8c4b9-ce9c-174a-c1a8-d0ad0fc21da9/source/100x100bb.png'
     # Slack payload
     payload = {
-        'title': 'Caching Server Data for ' +siteName + targetDate,
+        'title': 'Caching Server Data for ' +sitename + targetDate,
         'text': cacherdata
     }
     try:
@@ -810,7 +808,9 @@ def main():
                  help=("Optional: Use Microsoft Teams"))
     o.add_option("--teamswebhook", default=None,
                  help=("Optional: Micrsoft Teams Webhook URL. Requires Teamsalert Option."))
-    o.add_option('--proxy', default=None, help='Use a proxy server for Slack and Microsft Teams')
+    o.add_option('--proxy', default=None, help='Use a proxy server for Slack and Microsoft Teams')
+    o.add_option("--sitename", default="Your Caching Server", help=("Enter a site name to be displayed in output"
+                                                                    "Default is Your Caching Server"))
 
     opts, args = o.parse_args()
 
@@ -861,6 +861,7 @@ def main():
 
     proxyserver = opts.proxy
 
+    sitename = opts.sitename
     teamsalert = opts.teamsalert
     teamswebhook = opts.teamswebhook
     slackalert = opts.slackalert
@@ -885,10 +886,10 @@ def main():
         print ''
     if slackalert is True:
         post_to_slack(targetDate, "\n".join(cacherdata), slackchannel,
-                      slackusername, slackwebhook, useproxy, proxyserver, siteName)
+                      slackusername, slackwebhook, useproxy, proxyserver, sitename)
     if teamsalert is True:
         post_to_teams(targetDate, "\n".join(cacherdata), teamswebhook,
-                    useproxy, proxyserver, siteName)
+                    useproxy, proxyserver, sitename)
 
 
 if __name__ == '__main__':
