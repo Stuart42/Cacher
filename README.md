@@ -53,6 +53,7 @@ Options:
   --teamsalert		Optional: Use Microsft Teams. Need to also specify a webhook
   --teamswebhook=TEAMSWEBHOOK
 			Optional: Allows you to push to Microsft Teams webhook.
+  --sitename            Optional: Allows you to specify a site name used when sending stats to Teams or Slack
 ```
 ## Optional features
 The following are optional features:
